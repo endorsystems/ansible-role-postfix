@@ -1,0 +1,21 @@
+---
+- name: Ensure postfix is installed
+  package:
+    name: postfix
+    state: present
+    update_cache: true
+
+- name: Template out postfix config
+  template:
+    src: templates/main.cf.j2
+    dest: /etc/postfix/main.cf
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+  notify: restart postfix
+
+- name: Ensure postfix is enabled.
+  systemd:
+    state: started
+    name: postfix
